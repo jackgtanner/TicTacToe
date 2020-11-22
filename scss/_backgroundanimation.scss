@@ -14,7 +14,7 @@ section {
         z-index: 5;
         pointer-events: none;
         position: absolute;
-        animation: animate 5s linear infinite;
+        animation: animate 4s linear infinite;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -26,11 +26,11 @@ section {
         }
     }
 
-    .O {
+    .O{
         z-index: 5;
         pointer-events: none;
         position: absolute;
-        animation: animate 5s linear infinite;
+        animation: animate 4s linear infinite;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -51,11 +51,11 @@ section {
         }
 
         20% {
-            opacity: 1;
+            opacity: 0;
         }
 
         80% {
-            opacity: 1;
+            opacity: 0;
         }
 
         100% {
