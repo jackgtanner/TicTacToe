@@ -89,4 +89,4 @@ function Player (name, marker, score){
 }
 
 const player1 = new Player ("PLAYER 1", "X", 0);
-const player2 = new Player ("PLAYER 2", "O", 0);
+const player2 = new Player ("COMPUTER", "O", 0);
