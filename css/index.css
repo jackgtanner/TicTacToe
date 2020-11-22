@@ -59,6 +59,7 @@ section .O::after {
 
 html {
   font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
 }
 
 body {
