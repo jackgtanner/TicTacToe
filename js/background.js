@@ -29,7 +29,7 @@ function createSquare(){
 
     setTimeout(() =>{
         square.remove();
-    },5000)
+    },4000)
 }
 
-setInterval(createSquare, 100);
+setInterval(createSquare, 150);
