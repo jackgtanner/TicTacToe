@@ -64,6 +64,7 @@ html {
 
 body {
   padding: 20px;
+  width: 100vw;
   height: 100vh;
   background-color: #264653;
   display: flex;
