@@ -1,4 +1,4 @@
-@import "variables.scss";
+@import "scss/_variables.scss";
 
 section {
     font-family: 'Montserrat', sans-serif;
@@ -51,11 +51,11 @@ section {
         }
 
         20% {
-            opacity: 0;
+            opacity: 1;
         }
 
         80% {
-            opacity: 0;
+            opacity: 1;
         }
 
         100% {
