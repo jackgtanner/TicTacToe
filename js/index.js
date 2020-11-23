@@ -18,8 +18,9 @@ const gameBoard = (() => {
     //initialize the board with 9 blank cells
     const game = ["", "", "", "", "", "", "", "", ""];
     //
-    const showBoard = (marker) => {
+    const showBoard = (player) => {
         var container = document.querySelector(".container");
+        container.innerHTML = ""
         var board = document.createElement("div");
         board.classList.add("board");
 
@@ -27,18 +28,16 @@ const gameBoard = (() => {
         for (var i = 0; i < gameBoard.game.length; i++) {
             var cell = document.createElement("cell");
 
-            if (game[i] === "X"){
+            if (game[i] === `${player1.marker}`){
                 cell.innerText = player1.marker;
                 cell.classList.add("cellX");
-            } else if (game[i] === "O"){
+            } else if (game[i] === `${player2.marker}`){
                 cell.innerText = player2.marker;
                 cell.classList.add("cellO");
             } else cell.classList.add("cell");
-
-
-            if (marker === "X"){
-                cell.setAttribute('data-after', `${player1.marker}`)
-            } else cell.setAttribute('data-after', `${player2.marker}`)
+            
+            //set hover marker to the one assigned to the current player
+            cell.setAttribute('data-after', `${player.marker}`);
             board.appendChild(cell);
         }
         container.appendChild(board);
@@ -46,14 +45,19 @@ const gameBoard = (() => {
         //add event listener to each cell
         var cells = document.querySelectorAll("cell");
         cells.forEach((element, index) => {
-            element.addEventListener('click', () => {
-                container.innerHTML = '';
-                game[index] = `${marker}`
-                checkWin();
-                startGame();
-            })
+
+            if (game[index] === ""){
+                element.addEventListener('click', () => {
+                    container.innerHTML = '';
+                    game[index] = `${player.marker}`
+                    checkWin(player);
+                    startGame();
+                })
+            }
         });
+
         scores();
+        return
     };
 
     //set up and display the scores for each player
@@ -74,7 +78,7 @@ const gameBoard = (() => {
         Tied.innerText = "TIE";
         Player_2.innerText = `${player2.name} (${player2.marker})`;
         score1.innerText = player1.score;
-        score2.innerText = 0;
+        score2.innerText = tied;
         score3.innerText = player2.score;
 
         gameInfo.appendChild(Player_1);
@@ -83,10 +87,12 @@ const gameBoard = (() => {
         gameInfo.appendChild(score1);
         gameInfo.appendChild(score2);
         gameInfo.appendChild(score3);
+        return
     };
 
     //checks if there's a win on the board
-    const checkWin = () => {
+    const checkWin = (player) => {
+
         var winConditions =[
             [0, 1, 2],
             [3, 4, 5],
@@ -98,12 +104,38 @@ const gameBoard = (() => {
             [2, 4, 6]
         ]
 
+        for (i = 0; i < winConditions.length; i++){
+            var total = 0;
+            for (j = 0; j < winConditions[i].length; j++){
+
+                if (game[(winConditions[i][j])] === player.marker) total++;
+            }
+            if (total === 3) {
+                console.log(`${player.name} won`)
+                player.score++
+                reset();
+                startGame();
+            }
+        }
+
+
+        if (moves === 9){
+            console.log("Tied Game")
+            tied++;
+            reset();
+            startGame();
+        }
+
         
     }
 
     //reset the board back to its original state
     const reset = () => {
-        gameBoard.game = ["", "", "", "", "", "", "", "", ""];
+        for (i = 0; i < game.length; i++){
+            game[i] = "";
+        }
+        moves = -1;
+        return
     }
 
     //return the public methods
@@ -117,21 +149,24 @@ const gameBoard = (() => {
 
 
 //PLayer object
-function Player(name, marker, score) {
-    this.name = name;
-    this.marker = marker;
-    this.score = score;
+const Player = (name, marker, score) => {
+
+    return {name, marker, score};
 }
 
-const player1 = new Player("PLAYER 1", "X", 0);
-const player2 = new Player("COMPUTER", "O", 0);
-var moves = 0;
 
+//Function to start the game and handles the game functionality
 function startGame() {
-    var gameOver = false;
     moves++;
-    console.log(moves);
     if (moves%2 === 1){
-        gameBoard.showBoard(player1.marker)
-    } else gameBoard.showBoard(player2.marker)
+        gameBoard.showBoard(player1);
+    } else gameBoard.showBoard(player2);
 }
+
+
+
+//global code
+const player1 = Player("PLAYER 1", "X", 0);
+const player2 = Player("COMPUTER", "O", 0);
+var moves = 0;
+var tied = 0;
