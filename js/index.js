@@ -29,10 +29,10 @@ const gameBoard = (() => {
             var cell = document.createElement("cell");
 
             if (game[i] === `${player1.marker}`){
-                cell.innerText = player1.marker;
+                cell.innerHTML = player1.marker;
                 cell.classList.add("cellX");
             } else if (game[i] === `${player2.marker}`){
-                cell.innerText = player2.marker;
+                cell.innerHTML = player2.marker;
                 cell.classList.add("cellO");
             } else cell.classList.add("cell");
             
@@ -49,15 +49,15 @@ const gameBoard = (() => {
             if (game[index] === ""){
                 element.addEventListener('click', () => {
                     container.innerHTML = '';
-                    game[index] = `${player.marker}`
+                    game[index] = `${player.marker}`;
                     checkWin(player);
                     startGame();
+
                 })
             }
         });
 
         scores();
-        return
     };
 
     //set up and display the scores for each player
@@ -74,9 +74,9 @@ const gameBoard = (() => {
         var score2 = document.createElement('h5');
         var score3 = document.createElement('h5');
 
-        Player_1.innerText = `${player1.name} (${player1.marker})`;
+        Player_1.innerHTML = `${player1.name}  ${player1.marker}`;
         Tied.innerText = "TIE";
-        Player_2.innerText = `${player2.name} (${player2.marker})`;
+        Player_2.innerHTML = `${player2.name}  ${player2.marker}`;
         score1.innerText = player1.score;
         score2.innerText = tied;
         score3.innerText = player2.score;
@@ -87,12 +87,11 @@ const gameBoard = (() => {
         gameInfo.appendChild(score1);
         gameInfo.appendChild(score2);
         gameInfo.appendChild(score3);
-        return
     };
+
 
     //checks if there's a win on the board
     const checkWin = (player) => {
-
         var winConditions =[
             [0, 1, 2],
             [3, 4, 5],
@@ -103,7 +102,6 @@ const gameBoard = (() => {
             [0, 4, 8],
             [2, 4, 6]
         ]
-
         for (i = 0; i < winConditions.length; i++){
             var total = 0;
             for (j = 0; j < winConditions[i].length; j++){
@@ -111,14 +109,13 @@ const gameBoard = (() => {
                 if (game[(winConditions[i][j])] === player.marker) total++;
             }
             if (total === 3) {
-                console.log(`${player.name} won`)
+                console.log(`${player.name} won`);
                 player.win(player);
                 player.score++
                 reset();
                 startGame();
             }
         }
-
 
         if (moves === 9){
             console.log("Tied Game")
@@ -127,8 +124,6 @@ const gameBoard = (() => {
             reset();
             startGame();
         }
-
-        
     }
 
     //reset the board back to its original state
@@ -136,8 +131,21 @@ const gameBoard = (() => {
         for (i = 0; i < game.length; i++){
             game[i] = "";
         }
-        moves = -1;
-        return
+        moves = getRandomIntInclusive(-1, 0);
+    }
+
+    const computerPlay = (player) => {
+        var i =getRandomIntInclusive(0, 8);
+        cell = game[i];
+
+        if (cell != ""){
+            computerPlay(player);
+        } else {
+            game[i] = player.marker;
+            checkWin(player);
+            startGame();
+            return;
+        }
     }
 
     //return the public methods
@@ -145,6 +153,8 @@ const gameBoard = (() => {
         game,
         showBoard,
         scores,
+        reset,
+        computerPlay,
     };
 })();
 
@@ -168,15 +178,28 @@ const Player = (name, marker, score) => {
 //Function to start the game and handles the game functionality
 function startGame() {
     moves++;
-    if (moves%2 === 1){
+    console.log("moves", moves)
+    if ((moves%2 === 1) || (moves === 0)){
+        console.log("X")
         gameBoard.showBoard(player1);
-    } else gameBoard.showBoard(player2);
+    } else {
+        console.log("O")
+        gameBoard.showBoard(player2);
+        if(player2.name === "COMPUTER") gameBoard.computerPlay(player2); //MiniMax Computer AI function.
+    }
+    return
+}
+
+function getRandomIntInclusive(min, max){
+    var min = Math.ceil(min);
+    var max = Math.floor(max);
+    return Math.floor(Math.random() * (max-min + 1) + min); 
 }
 
 
 
 //global code
-const player1 = Player("PLAYER 1", "X", 0);
-const player2 = Player("COMPUTER", "O", 0);
-var moves = 0;
+const player1 = Player("PLAYER 1", 'X', 0);
+const player2 = Player("COMPUTER", 'O', 0);
+var moves = getRandomIntInclusive(0, 1);
 var tied = 0;
