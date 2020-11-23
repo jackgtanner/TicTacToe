@@ -170,7 +170,7 @@ function startGame() {
     moves++;
     if (moves%2 === 1){
         gameBoard.showBoard(player1);
-    } else gameBoard.showBoard(player2);1
+    } else gameBoard.showBoard(player2);
 }
 
 
