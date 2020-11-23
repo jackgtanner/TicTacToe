@@ -112,6 +112,7 @@ const gameBoard = (() => {
             }
             if (total === 3) {
                 console.log(`${player.name} won`)
+                player.win(player);
                 player.score++
                 reset();
                 startGame();
@@ -121,6 +122,7 @@ const gameBoard = (() => {
 
         if (moves === 9){
             console.log("Tied Game")
+            player.tied(player);
             tied++;
             reset();
             startGame();
@@ -151,7 +153,15 @@ const gameBoard = (() => {
 //PLayer object
 const Player = (name, marker, score) => {
 
-    return {name, marker, score};
+    const win = (player) => {
+        alert(`${player.name} won!`);
+    };
+
+    const tied = (player) => {
+        alert(`The game was a Tie`);
+    }
+
+    return {name, marker, score, win, tied};
 }
 
 
@@ -160,7 +170,7 @@ function startGame() {
     moves++;
     if (moves%2 === 1){
         gameBoard.showBoard(player1);
-    } else gameBoard.showBoard(player2);
+    } else gameBoard.showBoard(player2);1
 }
 
 
