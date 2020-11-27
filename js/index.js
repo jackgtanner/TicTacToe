@@ -1,6 +1,8 @@
 //JS for the newgame button
 const newGame = document.querySelector(".newGame button")
-var newGameSound = new Audio(("./assets/NewGame.wav"))
+const newGameSound = new Audio(("./assets/NewGame.wav"));
+const player_1_move = new Audio("assets/Player1Move.wav");
+const player_2_move = new Audio("assets/Player2Move.wav");
 newGame.addEventListener("click", () => {
 
     //remove the button & play sound
@@ -48,16 +50,16 @@ const gameBoard = (() => {
 
             if (game[index] === ""){
                 element.addEventListener('click', () => {
+                    player_1_move.play();
                     container.innerHTML = '';
                     game[index] = `${player.marker}`;
-                    checkWin(player);
+                    hasPlayerWon(player);
                     startGame();
-
                 })
             }
         });
-
         scores();
+        return
     };
 
     //set up and display the scores for each player
@@ -87,6 +89,7 @@ const gameBoard = (() => {
         gameInfo.appendChild(score1);
         gameInfo.appendChild(score2);
         gameInfo.appendChild(score3);
+        return
     };
 
 
@@ -107,23 +110,36 @@ const gameBoard = (() => {
             for (j = 0; j < winConditions[i].length; j++){
 
                 if (game[(winConditions[i][j])] === player.marker) total++;
+                
             }
             if (total === 3) {
-                console.log(`${player.name} won`);
-                player.win(player);
-                player.score++
-                reset();
-                startGame();
+                return 1;
             }
         }
+        var draw = 0;
+        for (i = 0; i < game.length; i++){
+            if (game[i] != "") draw++;
+            if (draw === 9){
+                return 0;
+            }
+        }
+    }
 
-        if (moves === 9){
+    const hasPlayerWon = (player) =>{
+        if (checkWin(player) === 1) {
+            console.log(`${player.name} won`);
+            player.win(player);
+            player.score++
+            reset();
+            startGame();
+        } else if(checkWin(player) === 0){
             console.log("Tied Game")
             player.tied(player);
             tied++;
             reset();
             startGame();
         }
+        return
     }
 
     //reset the board back to its original state
@@ -142,7 +158,7 @@ const gameBoard = (() => {
             computerPlay(player);
         } else {
             game[i] = player.marker;
-            checkWin(player);
+            hasPlayerWon(player);
             startGame();
             return;
         }
@@ -185,8 +201,9 @@ function startGame() {
     } else {
         console.log("O")
         gameBoard.showBoard(player2);
-        if(player2.name === "COMPUTER") gameBoard.computerPlay(player2); //MiniMax Computer AI function.
+        if(player2.name === "COMPUTER") gameBoard.computerPlay(player2); //Easy mode Computer AI function.
     }
+    console.log(gameBoard.game);
     return
 }
 
@@ -196,10 +213,49 @@ function getRandomIntInclusive(min, max){
     return Math.floor(Math.random() * (max-min + 1) + min); 
 }
 
+function newIcon(newMarker, oldIcon){
+    for (i = 0; i<gameBoard.game.length; i++){
+        if (gameBoard.game[i] === oldIcon){
+            gameBoard.game[i] = newMarker;
+        }
+    }
+    return
+}
+
+function hasGameStarted(){
+
+    if (newGame.style.display != "none"){
+        //remove the button & play sound
+        newGame.style.display = ("none");
+        newGameSound.play();
+
+        //call startGame function
+        startGame();
+    }
+    return
+}
+
+
+const picker = document.querySelectorAll('emoji-picker')
+picker[0].addEventListener('emoji-click', emoji => {
+    hasGameStarted();
+    var oldIcon = player1.marker;
+    player1.marker = emoji.detail.unicode;
+    newIcon(player1.marker, oldIcon);
+    gameBoard.showBoard(player1);
+});
+picker[1].addEventListener('emoji-click', emoji => {
+    hasGameStarted();
+    oldIcon = player2.marker
+    player2.marker = emoji.detail.unicode;
+    newIcon(player2.marker, oldIcon);
+    gameBoard.showBoard(player1);
+});
 
 
 //global code
-const player1 = Player("PLAYER 1", 'X', 0);
-const player2 = Player("COMPUTER", 'O', 0);
+var player1 = Player("PLAYER 1", 'X', 0);
+var player2 = Player("COMPUTER", 'O', 0);
 var moves = getRandomIntInclusive(0, 1);
 var tied = 0;
+

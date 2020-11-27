@@ -16,8 +16,7 @@ section .X {
   align-items: center;
 }
 section .X::after {
-  content: "X";
-  font-size: 50px;
+  content: attr(playerIcon);
   font-weight: bolder;
 }
 section .O {
@@ -30,8 +29,7 @@ section .O {
   align-items: center;
 }
 section .O::after {
-  content: "0";
-  font-size: 50px;
+  content: attr(playerIcon);
   font-weight: bolder;
 }
 @keyframes animate {
@@ -69,7 +67,7 @@ body {
   background-color: #264653;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: relative;
   overflow: hidden;
@@ -331,4 +329,134 @@ div {
   .board .cellO {
     font-size: 18px;
   }
+}
+
+.sideBar {
+  z-index: 1000;
+  background-color: #2a9d8f;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 75px;
+  height: 100%;
+  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 650px) {
+  .sideBar {
+    display: none;
+  }
+}
+.sideBar ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 40px;
+}
+.sideBar ul li {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  list-style: none;
+  border-top: 1px solid #264653;
+  border-bottom: 1px solid #264653;
+  color: #264653;
+}
+.sideBar ul li:nth-child(1) {
+  border-top: 2px solid #264653;
+}
+.sideBar ul li:nth-child(3) {
+  border-bottom: 2px solid #264653;
+}
+.sideBar ul li:hover {
+  transition: 0.15s;
+  background-color: #264653;
+  color: #2a9d8f;
+}
+.sideBar ul li a {
+  padding: 0;
+  height: 45px;
+  color: inherit;
+}
+.sideBar ul li .fa-user-circle, .sideBar ul li .fa-sync-alt, .sideBar ul li .fa-cogs {
+  cursor: pointer;
+  color: inherit;
+  height: 45px;
+  width: 45px;
+}
+.sideBar:hover {
+  transition: 0.15s;
+  opacity: 1;
+}
+.sideBar img {
+  position: absolute;
+  bottom: 20px;
+  left: 28px;
+  object-position: center;
+}
+
+.accounts, .settings {
+  z-index: 999;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cont {
+  width: 60vw;
+  max-width: 600px;
+  min-width: 250px;
+  height: 60vh;
+  max-height: 600px;
+  min-height: 250px;
+  z-index: 1000;
+  background-color: #2a9d8f;
+  position: absolute;
+  padding: 2%;
+  border: 5px solid #264653;
+  border-radius: 50px;
+  display: inline;
+  align-items: center;
+  overflow-y: scroll;
+}
+.cont::-webkit-scrollbar {
+  width: 0;
+}
+.cont .dropbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 100px 0;
+}
+.cont .dropbtn h4 {
+  text-decoration: underline;
+}
+.cont emoji-picker {
+  --background: $background-color;
+  --border-size: 5px;
+}
+.cont .close {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  background-color: #264653;
+  color: #2a9d8f;
 }
